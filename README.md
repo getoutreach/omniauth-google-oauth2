@@ -5,9 +5,7 @@
 
 Strategy to authenticate with Google via OAuth2 in OmniAuth.
 
-Get your API key at: https://code.google.com/apis/console/  Note the Client ID and the Client Secret.
-
-**Note**: You must enable the "Contacts API" and "Google+ API" via the Google API console. Otherwise, you will receive an `OAuth2::Error` stating that access is not configured when you attempt to authenticate.
+Get your API key at: https://code.google.com/apis/console/ Note the Client ID and the Client Secret.
 
 For more details, read the Google docs: https://developers.google.com/accounts/docs/OAuth2
 
@@ -23,12 +21,10 @@ Then `bundle install`.
 
 ## Google API Setup
 
-* Go to 'https://console.developers.google.com'
-* Select your project.
-* Click 'Enable and manage APIs'.
-* Make sure "Contacts API" and "Google+ API" are on.
-* Go to Credentials, then select the "OAuth consent screen" tab on top, and provide an 'EMAIL ADDRESS' and a 'PRODUCT NAME'
-* Wait 10 minutes for changes to take effect.
+- Go to 'https://console.developers.google.com'
+- Select your project.
+- Go to Credentials, then select the "OAuth consent screen" tab on top, and provide an 'EMAIL ADDRESS' and a 'PRODUCT NAME'
+- Wait 10 minutes for changes to take effect.
 
 ## Usage
 
@@ -50,39 +46,41 @@ NOTE: While developing your application, if you change the scope in the initiali
 
 You can configure several options, which you pass in to the `provider` method via a hash:
 
-* `scope`: A comma-separated list of permissions you want to request from the user. See the [Google OAuth 2.0 Playground](https://developers.google.com/oauthplayground/) for a full list of available permissions. Caveats:
-  * The `email` and `profile` scopes are used by default. By defining your own `scope`, you override these defaults. If you need these scopes, don't forget to add them yourself!
-  * Scopes starting with `https://www.googleapis.com/auth/` do not need that prefix specified. So while you can use the smaller scope `books` since that permission starts with the mentioned prefix, you should use the full scope URL `https://docs.google.com/feeds/` to access a user's docs, for example.
-* `prompt`: A space-delimited list of string values that determines whether the user is re-prompted for authentication and/or consent. Possible values are:
-  * `none`: No authentication or consent pages will be displayed; it will return an error if the user is not already authenticated and has not pre-configured consent for the requested scopes. This can be used as a method to check for existing authentication and/or consent.
-  * `consent`: The user will always be prompted for consent, even if he has previously allowed access a given set of scopes.
-  * `select_account`: The user will always be prompted to select a user account. This allows a user who has multiple current account sessions to select one amongst them.
+- `scope`: A comma-separated list of permissions you want to request from the user. See the [Google OAuth 2.0 Playground](https://developers.google.com/oauthplayground/) for a full list of available permissions. Caveats:
+  - The `email` and `profile` scopes are used by default. By defining your own `scope`, you override these defaults. If you need these scopes, don't forget to add them yourself!
+  - Scopes starting with `https://www.googleapis.com/auth/` do not need that prefix specified. So while you can use the smaller scope `books` since that permission starts with the mentioned prefix, you should use the full scope URL `https://docs.google.com/feeds/` to access a user's docs, for example.
+- `prompt`: A space-delimited list of string values that determines whether the user is re-prompted for authentication and/or consent. Possible values are:
+
+  - `none`: No authentication or consent pages will be displayed; it will return an error if the user is not already authenticated and has not pre-configured consent for the requested scopes. This can be used as a method to check for existing authentication and/or consent.
+  - `consent`: The user will always be prompted for consent, even if he has previously allowed access a given set of scopes.
+  - `select_account`: The user will always be prompted to select a user account. This allows a user who has multiple current account sessions to select one amongst them.
 
   If no value is specified, the user only sees the authentication page if he is not logged in and only sees the consent page the first time he authorizes a given set of scopes.
 
-* `image_aspect_ratio`: The shape of the user's profile picture. Possible values are:
-  * `original`: Picture maintains its original aspect ratio.
-  * `square`: Picture presents equal width and height.
+- `image_aspect_ratio`: The shape of the user's profile picture. Possible values are:
+
+  - `original`: Picture maintains its original aspect ratio.
+  - `square`: Picture presents equal width and height.
 
   Defaults to `original`.
 
-* `image_size`: The size of the user's profile picture. The image returned will have width equal to the given value and variable height, according to the `image_aspect_ratio` chosen. Additionally, a picture with specific width and height can be requested by setting this option to a hash with `width` and `height` as keys. If only `width` or `height` is specified, a picture whose width or height is closest to the requested size and requested aspect ratio will be returned. Defaults to the original width and height of the picture.
+- `image_size`: The size of the user's profile picture. The image returned will have width equal to the given value and variable height, according to the `image_aspect_ratio` chosen. Additionally, a picture with specific width and height can be requested by setting this option to a hash with `width` and `height` as keys. If only `width` or `height` is specified, a picture whose width or height is closest to the requested size and requested aspect ratio will be returned. Defaults to the original width and height of the picture.
 
-* `name`: The name of the strategy. The default name is `google_oauth2` but it can be changed to any value, for example `google`. The OmniAuth URL will thus change to `/auth/google` and the `provider` key in the auth hash will then return `google`.
+- `name`: The name of the strategy. The default name is `google_oauth2` but it can be changed to any value, for example `google`. The OmniAuth URL will thus change to `/auth/google` and the `provider` key in the auth hash will then return `google`.
 
-* `access_type`: Defaults to `offline`, so a refresh token is sent to be used when the user is not present at the browser. Can be set to `online`. More about [offline access](https://developers.google.com/identity/protocols/OAuth2WebServer#offline)
+- `access_type`: Defaults to `offline`, so a refresh token is sent to be used when the user is not present at the browser. Can be set to `online`. More about [offline access](https://developers.google.com/identity/protocols/OAuth2WebServer#offline)
 
-* `hd`: (Optional) Limit sign-in to a particular Google Apps hosted domain. This can be simply string `'domain.com'` or an array `%w(domain.com domain.co)`. More information at: https://developers.google.com/accounts/docs/OpenIDConnect#hd-param
+- `hd`: (Optional) Limit sign-in to a particular Google Apps hosted domain. This can be simply string `'domain.com'` or an array `%w(domain.com domain.co)`. More information at: https://developers.google.com/accounts/docs/OpenIDConnect#hd-param
 
-* `jwt_leeway`: Number of seconds passed to the JWT library as leeway. Defaults to 60 seconds.
+- `jwt_leeway`: Number of seconds passed to the JWT library as leeway. Defaults to 60 seconds.
 
-* `skip_jwt`: Skip JWT processing. This is for users who are seeing JWT decoding errors with the `iat` field. Always try adjusting the leeway before disabling JWT processing.
+- `skip_jwt`: Skip JWT processing. This is for users who are seeing JWT decoding errors with the `iat` field. Always try adjusting the leeway before disabling JWT processing.
 
-* `login_hint`: When your app knows which user it is trying to authenticate, it can provide this parameter as a hint to the authentication server. Passing this hint suppresses the account chooser and either pre-fill the email box on the sign-in form, or select the proper session (if the user is using multiple sign-in), which can help you avoid problems that occur if your app logs in the wrong user account. The value can be either an email address or the sub string, which is equivalent to the user's Google+ ID.
+- `login_hint`: When your app knows which user it is trying to authenticate, it can provide this parameter as a hint to the authentication server. Passing this hint suppresses the account chooser and either pre-fill the email box on the sign-in form, or select the proper session (if the user is using multiple sign-in), which can help you avoid problems that occur if your app logs in the wrong user account. The value can be either an email address or the sub string, which is equivalent to the user's Google+ ID.
 
-* `include_granted_scopes`: If this is provided with the value true, and the authorization request is granted, the authorization will include any previous authorizations granted to this user/application combination for other scopes. See Google's [Incremental Autorization](https://developers.google.com/accounts/docs/OAuth2WebServer#incrementalAuth) for additional details.
+- `include_granted_scopes`: If this is provided with the value true, and the authorization request is granted, the authorization will include any previous authorizations granted to this user/application combination for other scopes. See Google's [Incremental Autorization](https://developers.google.com/accounts/docs/OAuth2WebServer#incrementalAuth) for additional details.
 
-* `openid_realm`: Set the OpenID realm value, to allow upgrading from OpenID based authentication to OAuth 2 based authentication. When this is set correctly an `openid_id` value will be set in `[:extra][:id_info]` in the authentication hash with the value of the user's OpenID ID URL.
+- `openid_realm`: Set the OpenID realm value, to allow upgrading from OpenID based authentication to OAuth 2 based authentication. When this is set correctly an `openid_id` value will be set in `[:extra][:id_info]` in the authentication hash with the value of the user's OpenID ID URL.
 
 Here's an example of a possible configuration where the strategy name is changed, the user is asked for extra permissions, the user is always prompted to select his account when logging in and the user's profile picture is returned as a thumbnail:
 
@@ -90,11 +88,10 @@ Here's an example of a possible configuration where the strategy name is changed
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
     {
-      :name => "google",
-      :scope => "email, profile, plus.me, http://gdata.youtube.com",
-      :prompt => "select_account",
-      :image_aspect_ratio => "square",
-      :image_size => 50
+      scope: 'userinfo.email, userinfo.profile, http://gdata.youtube.com',
+      prompt: 'select_account',
+      image_aspect_ratio: 'square',
+      image_size: 50
     }
 end
 ```
@@ -120,33 +117,17 @@ Here's an example of an authentication hash available in the callback by accessi
         :expires_at => 1354920555,
         :expires => true
     },
-    :extra => {
-        :raw_info => {
-            :sub => "123456789",
-            :email => "user@domain.example.com",
-            :email_verified => true,
-            :name => "John Doe",
-            :given_name => "John",
-            :family_name => "Doe",
-            :profile => "https://plus.google.com/123456789",
-            :picture => "https://lh3.googleusercontent.com/url/photo.jpg",
-            :gender => "male",
-            :birthday => "0000-06-25",
-            :locale => "en",
-            :hd => "company_name.com"
-        },
-        :id_info => {
-            "iss" => "accounts.google.com",
-            "at_hash" => "HK6E_P6Dh8Y93mRNtsDB1Q",
-            "email_verified" => "true",
-            "sub" => "10769150350006150715113082367",
-            "azp" => "APP_ID",
-            "email" => "jsmith@example.com",
-            "aud" => "APP_ID",
-            "iat" => 1353601026,
-            "exp" => 1353604926,
-            "openid_id" => "https://www.google.com/accounts/o8/id?id=ABCdfdswawerSDFDsfdsfdfjdsf"
-        }
+    "raw_info" => {
+      "sub" => "100000000000000000000",
+      "name" => "John Smith",
+      "given_name" => "John",
+      "family_name" => "Smith",
+      "profile" => "https://plus.google.com/+JohnSmith",
+      "picture" => "https://lh4.googleusercontent.com/photo.jpg?sz=50",
+      "email" => "john@example.com",
+      "email_verified" => "true",
+      "locale" => "en",
+      "hd" => "company.com"
     }
 }
 ```
@@ -218,62 +199,51 @@ An overview is available at https://github.com/plataformatec/devise/wiki/OmniAut
 
 ### One-time Code Flow (Hybrid Authentication)
 
-Google describes the One-time Code Flow [here](https://developers.google.com/+/web/signin/server-side-flow).  This hybrid authentication flow has significant functional and security advantages over a pure server-side or pure client-side flow.  The following steps occur in this flow:
+Google describes the One-time Code Flow [here](https://developers.google.com/+/web/signin/server-side-flow). This hybrid authentication flow has significant functional and security advantages over a pure server-side or pure client-side flow. The following steps occur in this flow:
 
-1. The client (web browser) authenticates the user directly via Google's JS API.  During this process assorted modals may be rendered by Google.
+1. The client (web browser) authenticates the user directly via Google's JS API. During this process assorted modals may be rendered by Google.
 2. On successful authentication, Google returns a one-time use code, which requires the Google client secret (which is only available server-side).
 3. Using a AJAX request, the code is POSTed to the Omniauth Google OAuth2 callback.
-4. The Omniauth Google OAuth2 gem will validate the code via a server-side request to Google.  If the code is valid, then Google will return an access token and, if this is the first time this user is authenticating against this application, a refresh token.  Both of these should be stored on the server.  The response to the AJAX request indicates the success or failure of this process.
+4. The Omniauth Google OAuth2 gem will validate the code via a server-side request to Google. If the code is valid, then Google will return an access token and, if this is the first time this user is authenticating against this application, a refresh token. Both of these should be stored on the server. The response to the AJAX request indicates the success or failure of this process.
 
 This flow is immune to replay attacks, and conveys no useful information to a man in the middle.
 
-The omniauth-google-oauth2 gem supports this mode of operation out of the box.  Implementors simply need to add the appropriate JavaScript to their web page, and they can take advantage of this flow.  An example JavaScript snippet follows.
+The omniauth-google-oauth2 gem supports this mode of operation out of the box. Implementors simply need to add the appropriate JavaScript to their web page, and they can take advantage of this flow. An example JavaScript snippet follows.
 
 ```javascript
 // Basic hybrid auth example following the pattern at:
-// https://developers.google.com/api-client-library/javascript/features/authentication#Authexample
-jQuery(function() {
-  return $.ajax({
-    url: 'https://apis.google.com/js/client:plus.js?onload=gpAsyncInit',
-    dataType: 'script',
-    cache: true
-  });
-});
+// https://developers.google.com/identity/sign-in/web/reference
 
-window.gpAsyncInit = function() {
-  gapi.auth.authorize({
-    immediate: true,
-    response_type: 'code',
-    cookie_policy: 'single_host_origin',
-    client_id: 'YOUR_CLIENT_ID',
-    scope: 'email profile'
-  }, function(response) {
-    return;
-  });
-  $('.googleplus-login').click(function(e) {
-    e.preventDefault();
-    gapi.auth.authorize({
-      immediate: false,
-      response_type: 'code',
-      cookie_policy: 'single_host_origin',
-      client_id: 'YOUR_CLIENT_ID',
-      scope: 'email profile'
-    }, function(response) {
-      if (response && !response.error) {
-        // google authentication succeed, now post data to server.
-        jQuery.ajax({type: 'POST', url: "/auth/google_oauth2/callback", 
-data: response,
-          success: function(data) {
-            // response from server
-          }
-        });
-      } else {
-        // google authentication failed
-      }
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+
+...
+
+function init() {
+  gapi.load('auth2', function() {
+    // Ready.
+    $('.google-login-button').click(function(e) {
+      e.preventDefault();
+
+      gapi.auth2.authorize({
+        client_id: 'YOUR_CLIENT_ID',
+        cookie_policy: 'single_host_origin',
+        scope: 'email profile',
+        response_type: 'code'
+      }, function(response) {
+        if (response && !response.error) {
+          // google authentication succeed, now post data to server.
+          jQuery.ajax({type: 'POST', url: '/auth/google_oauth2/callback', data: response,
+            success: function(data) {
+              // response from server
+            }
+          });
+        } else {
+          // google authentication failed
+        }
+      });
     });
   });
 };
-
 ```
 
 ### Omniauth state
@@ -292,7 +262,7 @@ class ApplicationController < ActionController::Base
 ...
 ```
 
-and add ```skip_before_filter :verify_authenticity_token``` in your omniauth callback controller because it is already verified by omniauth state. And then you need to add ```:provider_ignores_state => true``` in your omniauth initializer.
+and add `skip_before_filter :verify_authenticity_token` in your omniauth callback controller because it is already verified by omniauth state. And then you need to add `:provider_ignores_state => true` in your omniauth initializer.
 
 ## Fixing Protocol Mismatch for `redirect_uri` in Rails
 
